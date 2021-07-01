@@ -1,11 +1,6 @@
 /* ensure all pages have Bootstrap CSS */
 @import '~bootstrap/dist/css/bootstrap.min.css';
 
-.md-container {
-  max-width: 800px;
-  padding-top: 2rem;
-}
-
 .sml-card {
   width: 22rem;
   margin: 1rem 0;
@@ -23,4 +18,18 @@
 .sml-logo {
   height: 1em;
   margin-left: 10px;
+}
+
+body {
+  color: white;
+  background-color: rgb(54, 54, 54);
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0px 10px;
+}
+
+td {
+  padding-right: 30px;
 }
