@@ -1,5 +1,5 @@
-import getConfig from 'next/config'
-const { publicRuntimeConfig } = getConfig()
+// import getConfig from 'next/config'
+// const { publicRuntimeConfig } = getConfig()
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))

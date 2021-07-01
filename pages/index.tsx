@@ -1,10 +1,11 @@
 import Head from 'next/head'
-import getConfig from 'next/config'
+// import getConfig from 'next/config'
 import {Badge, Container, Jumbotron, Spinner} from 'react-bootstrap'
 import {useEffect, useState} from 'react'
-import {NextPage} from 'next'
+// import {NextPage} from 'next'
+const JSON5 = require('json5')
 
-const {publicRuntimeConfig} = getConfig()
+// const {publicRuntimeConfig} = getConfig()
 
 interface Props {
   config: Config,
@@ -67,7 +68,7 @@ const TableFill = ({title, tableLines}) => {
   )
 }
 
-const Main: NextPage<Main> = ({types, filterByType}) => {
+const Main = ({types_, tables, tablesSetter}) => {
 
   // useEffect(() => {
   //   const findRes = async () => {
@@ -85,25 +86,10 @@ const Main: NextPage<Main> = ({types, filterByType}) => {
   //     .catch((e) => `findRes failed: ${e}`)
   // }, [])
 
-  return (
-    <Container style={{maxWidth: "800px", paddingTop: "2rem"}}>
-      {types.map((title) =>
-        <TableFill key={title} title={title} tableLines={filterByType(title)}/>)
-      }
-    </Container>
-  )
-}
-
-const Header = () => (
-  <Jumbotron fluid style={{backgroundColor: "darkred", textAlign: "center"}}>
-    <h1>Status page</h1>
-  </Jumbotron>
-)
-
-const IndexPage: NextPage<Props> = ({config}) => {
-  let [tables, tablesSetter] = useState(config.list)
+  const filterByType = t => tables.filter(l => l.type == t)
 
   const updateStatus = (id: number, worked: boolean) => {
+    // debugger
     tablesSetter(tables.map(el =>
       el.id === id ? {...el, worked: worked} : el
     ))
@@ -121,7 +107,43 @@ const IndexPage: NextPage<Props> = ({config}) => {
       .catch((e) => `findRes failed: ${e}`)
   }, [])
 
-  const filterByType = t => tables.filter(l => l.type == t)
+  return (
+    <Container style={{maxWidth: "800px", paddingTop: "2rem"}}>
+      {types_.map((title) =>
+        <TableFill key={title} title={title} tableLines={filterByType(title)}/>)
+      }
+    </Container>
+  )
+}
+
+const Header = () => (
+  <Jumbotron fluid style={{backgroundColor: "darkred", textAlign: "center"}}>
+    <h1>Status page</h1>
+  </Jumbotron>
+)
+
+// const IndexPage: NextPage<Props> = ({config}) => {
+//   let [tables, tablesSetter] = useState(config.list)
+const IndexPage = () => {
+  const [tables, tablesSetter] = useState([])
+  const [types_, typesSetter] = useState([])
+
+  const getConfig = async () => {
+    let r = await fetch("/api/v1/https/")
+    let j = await r.json()
+    console.log(j)
+
+    tablesSetter(j.list)
+    typesSetter(j.types)
+    // debugger
+  }
+
+  useEffect(() => {
+    (async function anyNameFunction() {
+      await getConfig();
+    })();
+  }, [])
+
 
   return (
     <>
@@ -131,17 +153,18 @@ const IndexPage: NextPage<Props> = ({config}) => {
       </Head>
       <Header/>
       <Main
-        types={config.types}
-        filterByType={filterByType}
+        types_={types_}
+        tables={tables}
+        tablesSetter={tablesSetter}
       />
     </>
   )
 }
 
-IndexPage.getInitialProps = async (ctx) => {
-  const config: Config = publicRuntimeConfig
-  console.log(config)
-  return {config}
-}
+// IndexPage.getInitialProps = async (ctx) => {
+//   const config: Config = publicRuntimeConfig
+//   console.log(config)
+//   return {config}
+// }
 
 export default IndexPage
