@@ -4,5 +4,7 @@
     "cnn.com",
     "example.com",
   ],
-  "mysql": []
+  "mysql": [
+    "oursql.server"
+  ]
 }
