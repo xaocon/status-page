@@ -2,7 +2,7 @@ require('json5/lib/register')
 
 const config = require('./status-config.json5')
 
-// This is a little ugly but fine
+// This is a little ugly
 let newConfig = []
 let idx = 0
 for (const [key, values] of Object.entries(config)) {
